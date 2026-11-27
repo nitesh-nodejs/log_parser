@@ -59,7 +59,7 @@ fn file_reader(path: Urls) -> Option<Vec<String>> {
             println!("{}", error);
         }
     }
-    return Some(logs);
+    Some(logs)
 }
 
 fn log_parser() {
@@ -72,38 +72,38 @@ fn log_parser() {
             let parts: Vec<&str> = line.splitn(4, " ").collect();
             match parts.as_slice() {
                 [date, time, key, msg, ..] => {
-                    if *key == "Error" {
-                        if let Some(entry) = log_formatter(&format!(
+                    if *key == "Error"
+                        && let Some(entry) = log_formatter(&format!(
                             "{}: -m {}, -D {}&{}; -Ln {}\n",
                             key, msg, date, time, i
-                        )) {
-                            let timestamp = format!("{} {}", entry.date, entry.time);
-                            let level = entry.level.to_uppercase();
+                        ))
+                    {
+                        let timestamp = format!("{} {}", entry.date, entry.time);
+                        let level = entry.level.to_uppercase();
 
-                            // Capitalize first letter of details
-                            let mut chars = entry.details.chars();
-                            let details = match chars.next() {
-                                None => String::new(),
-                                Some(first) => {
-                                    first.to_uppercase().collect::<String>() + chars.as_str()
-                                }
-                            };
+                        // Capitalize first letter of details
+                        let mut chars = entry.details.chars();
+                        let details = match chars.next() {
+                            None => String::new(),
+                            Some(first) => {
+                                first.to_uppercase().collect::<String>() + chars.as_str()
+                            }
+                        };
 
-                            let border = "+---------------------+-------+---------+--------------------------------------+------+";
+                        let border = "+---------------------+-------+---------+--------------------------------------+------+";
 
-                            println!("{}", border);
-                            println!(
-                                "| {:<19} | {:<5} | {:<7} | {:<36} | {:<4} |",
-                                "Timestamp", "Level", "User ID", "Details", "Line"
-                            );
-                            println!("{}", border);
-                            println!(
-                                "| {:<19} | {:<5} | {:<7} | {:<36} | {:<4} |",
-                                timestamp, level, entry.user_id, details, entry.line
-                            );
-                            println!("{}", border);
-                        }
-                    };
+                        println!("{}", border);
+                        println!(
+                            "| {:<19} | {:<5} | {:<7} | {:<36} | {:<4} |",
+                            "Timestamp", "Level", "User ID", "Details", "Line"
+                        );
+                        println!("{}", border);
+                        println!(
+                            "| {:<19} | {:<5} | {:<7} | {:<36} | {:<4} |",
+                            timestamp, level, entry.user_id, details, entry.line
+                        );
+                        println!("{}", border);
+                    }
                 }
                 _ => continue,
             }
@@ -112,6 +112,5 @@ fn log_parser() {
     // return result;
 }
 fn main() {
-    let a = log_parser();
-    println!("{:?}", a);
+    log_parser();
 }
